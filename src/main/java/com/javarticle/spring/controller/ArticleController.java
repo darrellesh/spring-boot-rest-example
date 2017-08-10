@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +36,7 @@ public class ArticleController {
         return new ResponseEntity<List<Article>>(list, HttpStatus.OK);
     }
     @RequestMapping(value = "article", method = RequestMethod.POST)
-    public ResponseEntity<Void> addArticle(@RequestBody Article article, UriComponentsBuilder builder) {
+    public ResponseEntity<Void> addArticle(@Validated @RequestBody Article article, UriComponentsBuilder builder) {
         boolean flag = articleService.addArticle(article);
         if (flag == false) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
