@@ -1,0 +1,8 @@
+com/javarticle/spring/entity/Article.class
+com/javarticle/spring/service/ArticleService.class
+com/javarticle/spring/dao/IArticleDAO.class
+com/javarticle/spring/config/SwaggerConfig.class
+com/javarticle/spring/MyApplication.class
+com/javarticle/spring/dao/ArticleDAO.class
+com/javarticle/spring/service/IArticleService.class
+com/javarticle/spring/controller/ArticleController.class

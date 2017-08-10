@@ -1,6 +1,8 @@
-/Users/darrell-shofstall/Downloads/SpringBootRESTExample/src/main/java/com/javarticle/spring/rest/RESTClientExample.java
-/Users/darrell-shofstall/Downloads/SpringBootRESTExample/src/main/java/com/javarticle/spring/rest/EmployeeSource.java
-/Users/darrell-shofstall/Downloads/SpringBootRESTExample/src/main/java/com/javarticle/spring/config/SwaggerConfig.java
-/Users/darrell-shofstall/Downloads/SpringBootRESTExample/src/main/java/com/javarticle/spring/rest/RESTControllerExample.java
-/Users/darrell-shofstall/Downloads/SpringBootRESTExample/src/main/java/com/javarticle/spring/rest/Employee.java
-/Users/darrell-shofstall/Downloads/SpringBootRESTExample/src/main/java/com/javarticle/spring/rest/SpringRestExampleApplication.java
+/Users/darrell-shofstall/projects/SpringBootRESTExample/src/main/java/com/javarticle/spring/service/ArticleService.java
+/Users/darrell-shofstall/projects/SpringBootRESTExample/src/main/java/com/javarticle/spring/dao/IArticleDAO.java
+/Users/darrell-shofstall/projects/SpringBootRESTExample/src/main/java/com/javarticle/spring/entity/Article.java
+/Users/darrell-shofstall/projects/SpringBootRESTExample/src/main/java/com/javarticle/spring/service/IArticleService.java
+/Users/darrell-shofstall/projects/SpringBootRESTExample/src/main/java/com/javarticle/spring/MyApplication.java
+/Users/darrell-shofstall/projects/SpringBootRESTExample/src/main/java/com/javarticle/spring/dao/ArticleDAO.java
+/Users/darrell-shofstall/projects/SpringBootRESTExample/src/main/java/com/javarticle/spring/controller/ArticleController.java
+/Users/darrell-shofstall/projects/SpringBootRESTExample/src/main/java/com/javarticle/spring/config/SwaggerConfig.java
