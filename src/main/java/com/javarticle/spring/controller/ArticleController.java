@@ -4,10 +4,14 @@ package com.javarticle.spring.controller;
  * Created by darrell-shofstall on 8/9/17.
  */
 
+import java.text.ParseException;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.javarticle.spring.dto.ArticleDTO;
 import com.javarticle.spring.entity.Article;
 import com.javarticle.spring.service.IArticleService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -25,18 +29,24 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ArticleController {
     @Autowired
     private IArticleService articleService;
+    @Autowired
+    private ModelMapper modelMapper;
+
     @RequestMapping(value = "article/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Article> getArticleById(@PathVariable("id") Integer id) {
+    public ResponseEntity<ArticleDTO> getArticleById(@PathVariable("id") Integer id) {
         Article article = articleService.getArticleById(id);
-        return new ResponseEntity<Article>(article, HttpStatus.OK);
+        ArticleDTO articleDto = convertToDto(article);
+        return new ResponseEntity<ArticleDTO>(articleDto, HttpStatus.OK);
     }
     @RequestMapping(value = "articles", method = RequestMethod.GET)
-    public ResponseEntity<List<Article>> getAllArticles() {
+    public ResponseEntity<List<ArticleDTO>> getAllArticles() {
         List<Article> list = articleService.getAllArticles();
-        return new ResponseEntity<List<Article>>(list, HttpStatus.OK);
+        List<ArticleDTO> listDto = list.stream().map(item -> convertToDto(item)).collect(Collectors.toList());
+        return new ResponseEntity<List<ArticleDTO>>(listDto, HttpStatus.OK);
     }
     @RequestMapping(value = "article", method = RequestMethod.POST)
-    public ResponseEntity<Void> addArticle(@Validated @RequestBody Article article, UriComponentsBuilder builder) {
+    public ResponseEntity<Void> addArticle(@Validated @RequestBody ArticleDTO articleDto, UriComponentsBuilder builder) throws ParseException {
+        Article  article = convertToEntity(articleDto);
         boolean flag = articleService.addArticle(article);
         if (flag == false) {
             return new ResponseEntity<Void>(HttpStatus.CONFLICT);
@@ -46,13 +56,31 @@ public class ArticleController {
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
     @RequestMapping(value = "article", method = RequestMethod.PUT)
-    public ResponseEntity<Article> updateArticle(@RequestBody Article article) {
+    public ResponseEntity<ArticleDTO> updateArticle(@RequestBody ArticleDTO articleDto) throws ParseException {
+        Article article = convertToEntity(articleDto);
         articleService.updateArticle(article);
-        return new ResponseEntity<Article>(article, HttpStatus.OK);
+        return new ResponseEntity<ArticleDTO>(articleDto, HttpStatus.OK);
     }
     @RequestMapping(value = "article/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> deleteArticle(@PathVariable("id") Integer id) {
         articleService.deleteArticle(id);
         return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+    }
+
+    private ArticleDTO convertToDto(Article article) {
+        ArticleDTO articleDto = modelMapper.map(article, ArticleDTO.class);
+        return articleDto;
+    }
+
+    private Article convertToEntity(ArticleDTO articleDto) throws ParseException {
+        Article article = modelMapper.map(articleDto, Article.class);
+
+        if (articleDto.getArticleId() != 0) {
+            Article oldArticle = articleService.getArticleById(articleDto.getArticleId());
+            article.setCategory(oldArticle.getCategory());
+            article.setTitle(oldArticle.getTitle());
+        }
+        return article;
+
     }
 }

@@ -1,5 +1,6 @@
 package com.javarticle.spring.service;
 
+import com.javarticle.spring.dto.ArticleDTO;
 import com.javarticle.spring.entity.Article;
 
 import java.util.List;
