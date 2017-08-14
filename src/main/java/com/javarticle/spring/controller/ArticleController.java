@@ -37,6 +37,7 @@ public class ArticleController {
         ArticleDTO articleDto = convertToDto(article);
         return new ResponseEntity<ArticleDTO>(articleDto, HttpStatus.OK);
     }
+
     @RequestMapping(value = "articles", method = RequestMethod.GET)
     public ResponseEntity<List<ArticleDTO>> getAllArticles() {
         List<Article> list = articleService.getAllArticles();
@@ -48,9 +49,9 @@ public class ArticleController {
     public ResponseEntity<List<ArticleDTO>> getPage(@RequestParam(name = "p", defaultValue = "1") int pageNumber) {
 
         Page<Article> articles = articleService.getPage(pageNumber);
-        ResponseEntity response = new ResponseEntity<>(articles, HttpStatus.OK);
         List<ArticleDTO> listDto = articles.map(article -> convertToDto(article)).getContent();
-        return response; //new ResponseEntity<List<ArticleDTO>>(listDto, HttpStatus.OK);
+
+        return new ResponseEntity<List<ArticleDTO>>(listDto, appendPageableResponseHeader(articles), HttpStatus.OK);
     }
 
     @RequestMapping(value = "article", method = RequestMethod.POST)
@@ -64,12 +65,14 @@ public class ArticleController {
         headers.setLocation(builder.path("/article/{id}").buildAndExpand(article.getArticleId()).toUri());
         return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
     }
+
     @RequestMapping(value = "article", method = RequestMethod.PUT)
     public ResponseEntity<ArticleDTO> updateArticle(@RequestBody ArticleDTO articleDto) throws ParseException {
         Article article = convertToEntity(articleDto);
         articleService.updateArticle(article);
         return new ResponseEntity<ArticleDTO>(articleDto, HttpStatus.OK);
     }
+
     @RequestMapping(value = "article/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Void> deleteArticle(@PathVariable("id") Integer id) {
         articleService.deleteArticle(id);
@@ -86,5 +89,20 @@ public class ArticleController {
 
         return article;
 
+    }
+
+    private HttpHeaders appendPageableResponseHeader(Page<Article> articles ) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("NAVIS-total-elements", String.valueOf(articles.getTotalElements()));
+        headers.set("NAVIS-total-pages", String.valueOf(articles.getTotalPages()));
+        headers.set("NAVIS-first-page", String.valueOf(articles.isFirst()));
+        headers.set("NAVIS-last-page", String.valueOf(articles.isLast()));
+        headers.set("NAVIS-number-of-elements", String.valueOf(articles.getNumberOfElements()));
+        headers.set("NAVIS-page-size", String.valueOf(articles.getSize()));
+        headers.set("NAVIS-current-page-number", String.valueOf((articles.getNumber()) + 1));
+        headers.set("NAVIS-has-next-page", String.valueOf(articles.hasNext()));
+        headers.set("NAVIS-has-previous-page", String.valueOf(articles.hasPrevious()));
+
+        return headers;
     }
 }
