@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.javarticle.spring.dto.ArticleDTO;
+import com.javarticle.spring.dto.ResponseDTO;
 import com.javarticle.spring.entity.Article;
 import com.javarticle.spring.service.IArticleService;
 import org.modelmapper.ModelMapper;
@@ -51,7 +52,7 @@ public class ArticleController {
         Page<Article> articles = articleService.getPage(pageNumber);
         List<ArticleDTO> listDto = articles.map(article -> convertToDto(article)).getContent();
 
-        return new ResponseEntity<List<ArticleDTO>>(listDto, appendPageableResponseHeader(articles), HttpStatus.OK);
+        return new ResponseEntity(buildResponseDto(articles, listDto), HttpStatus.OK);
     }
 
     @RequestMapping(value = "article", method = RequestMethod.POST)
@@ -91,18 +92,21 @@ public class ArticleController {
 
     }
 
-    private HttpHeaders appendPageableResponseHeader(Page<Article> articles ) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("NAVIS-total-elements", String.valueOf(articles.getTotalElements()));
-        headers.set("NAVIS-total-pages", String.valueOf(articles.getTotalPages()));
-        headers.set("NAVIS-first-page", String.valueOf(articles.isFirst()));
-        headers.set("NAVIS-last-page", String.valueOf(articles.isLast()));
-        headers.set("NAVIS-number-of-elements", String.valueOf(articles.getNumberOfElements()));
-        headers.set("NAVIS-page-size", String.valueOf(articles.getSize()));
-        headers.set("NAVIS-current-page-number", String.valueOf((articles.getNumber()) + 1));
-        headers.set("NAVIS-has-next-page", String.valueOf(articles.hasNext()));
-        headers.set("NAVIS-has-previous-page", String.valueOf(articles.hasPrevious()));
+    private ResponseDTO buildResponseDto(Page<Article> articles, List<ArticleDTO> listDto ) {
 
-        return headers;
+        ResponseDTO responseDto = new ResponseDTO();
+        responseDto.setTotalPages(articles.getTotalPages());
+        responseDto.setFirstPage(articles.isFirst());
+        responseDto.setLastPage(articles.isLast());
+        responseDto.setCurrentPageNumber(articles.getNumber());
+        responseDto.setHasNextPage(articles.hasNext());
+        responseDto.setHasPreviousPage(articles.hasPrevious());
+        responseDto.setNumberOfElements(articles.getNumberOfElements());
+        responseDto.setPageSize(articles.getSize());
+        responseDto.setTotalElements(articles.getTotalElements());
+
+        responseDto.setArticles(listDto);
+
+        return responseDto;
     }
 }
