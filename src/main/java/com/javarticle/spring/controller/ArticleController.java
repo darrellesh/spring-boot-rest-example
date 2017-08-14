@@ -47,9 +47,10 @@ public class ArticleController {
     @RequestMapping(value = "articlesByPage", method = RequestMethod.GET)
     public ResponseEntity<List<ArticleDTO>> getPage(@RequestParam(name = "p", defaultValue = "1") int pageNumber) {
 
-        List<Article> articles = articleService.getPage(pageNumber);
-        List<ArticleDTO> listDto = articles.stream().map(article -> convertToDto(article)).collect(Collectors.toList());
-        return new ResponseEntity<List<ArticleDTO>>(listDto, HttpStatus.OK);
+        Page<Article> articles = articleService.getPage(pageNumber);
+        ResponseEntity response = new ResponseEntity<>(articles, HttpStatus.OK);
+        List<ArticleDTO> listDto = articles.map(article -> convertToDto(article)).getContent();
+        return response; //new ResponseEntity<List<ArticleDTO>>(listDto, HttpStatus.OK);
     }
 
     @RequestMapping(value = "article", method = RequestMethod.POST)
@@ -83,11 +84,6 @@ public class ArticleController {
     private Article convertToEntity(ArticleDTO articleDto) throws ParseException {
         Article article = modelMapper.map(articleDto, Article.class);
 
-        if (articleDto.getArticleId() != 0) {
-            Article oldArticle = articleService.getArticleById(articleDto.getArticleId());
-            article.setCategory(oldArticle.getCategory());
-            article.setTitle(oldArticle.getTitle());
-        }
         return article;
 
     }

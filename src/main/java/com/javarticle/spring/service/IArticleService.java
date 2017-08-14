@@ -2,6 +2,7 @@ package com.javarticle.spring.service;
 
 import com.javarticle.spring.dto.ArticleDTO;
 import com.javarticle.spring.entity.Article;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -18,5 +19,5 @@ public interface IArticleService {
     boolean addArticle(Article article);
     void updateArticle(Article article);
     void deleteArticle(int articleId);
-    List<Article> getPage(int pageNumber);
+    Page<Article> getPage(int pageNumber);
 }

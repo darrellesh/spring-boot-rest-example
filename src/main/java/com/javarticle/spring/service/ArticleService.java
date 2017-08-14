@@ -55,9 +55,9 @@ public class ArticleService implements IArticleService {
     }
 
     @Override
-    public List<Article> getPage(int pageNumber) {
-        PageRequest request = new PageRequest(pageNumber - 1, PAGESIZE, Sort.Direction.ASC, "articleId");
+    public Page<Article> getPage(int pageNumber) {
+        Pageable request = new PageRequest(pageNumber - 1, PAGESIZE, Sort.Direction.ASC, "articleId");
 
-        return articleRepository.findAll(request).getContent();
+        return articleRepository.findAll(request);
     }
 }
