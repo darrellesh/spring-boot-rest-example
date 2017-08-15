@@ -9,13 +9,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.javarticle.spring.dto.ArticleDTO;
-import com.javarticle.spring.dto.ResponseDTO;
+import com.javarticle.spring.dto.ArticlesDTO;
+import com.javarticle.spring.dto.PageableDTO;
 import com.javarticle.spring.entity.Article;
 import com.javarticle.spring.service.IArticleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,20 +92,12 @@ public class ArticleController {
 
     }
 
-    private ResponseDTO buildResponseDto(Page<Article> articles, List<ArticleDTO> listDto ) {
+    private ArticlesDTO buildResponseDto(Page<Article> articles, List<ArticleDTO> listDto ) {
 
-        ResponseDTO responseDto = new ResponseDTO();
-        responseDto.setTotalPages(articles.getTotalPages());
-        responseDto.setFirstPage(articles.isFirst());
-        responseDto.setLastPage(articles.isLast());
-        responseDto.setCurrentPageNumber(articles.getNumber());
-        responseDto.setHasNextPage(articles.hasNext());
-        responseDto.setHasPreviousPage(articles.hasPrevious());
-        responseDto.setNumberOfElements(articles.getNumberOfElements());
-        responseDto.setPageSize(articles.getSize());
-        responseDto.setTotalElements(articles.getTotalElements());
-
+        ArticlesDTO responseDto = new ArticlesDTO();
+        PageableDTO pageableDTO = new PageableDTO(articles);
         responseDto.setArticles(listDto);
+        responseDto.setPageableDTO(pageableDTO);
 
         return responseDto;
     }

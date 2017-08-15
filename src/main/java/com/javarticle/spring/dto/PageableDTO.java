@@ -1,13 +1,14 @@
 package com.javarticle.spring.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 /**
  * Created by darrell-shofstall on 8/11/17.
  */
-public class ResponseDTO {
+public class PageableDTO {
 
     private static final long serialVersionUID = 1L;
 
@@ -20,8 +21,6 @@ public class ResponseDTO {
     private int numberOfElements;
     private int pageSize;
     private int currentPageNumber;
-
-    private List<ArticleDTO> articles;
 
     public long getTotalElements() {
         return totalElements;
@@ -59,10 +58,6 @@ public class ResponseDTO {
         return currentPageNumber;
     }
 
-    public List<ArticleDTO> getArticles() {
-        return articles;
-    }
-
     public void setTotalElements(long totalElements) {
         this.totalElements = totalElements;
     }
@@ -96,10 +91,18 @@ public class ResponseDTO {
     }
 
     public void setCurrentPageNumber(int currentPageNumber) {
-        this.currentPageNumber = currentPageNumber;
+        this.currentPageNumber = currentPageNumber + 1;
     }
 
-    public void setArticles(List<ArticleDTO> articles) {
-        this.articles = articles;
+    public PageableDTO(Page page) {
+        this.setCurrentPageNumber(page.getNumber());
+        this.setTotalElements(page.getTotalElements());
+        this.setTotalPages(page.getTotalPages());
+        this.setHasNextPage(page.hasNext());
+        this.setHasPreviousPage(page.hasPrevious());
+        this.setFirstPage(page.isFirst());
+        this.setLastPage(page.isLast());
+        this.setNumberOfElements(page.getNumberOfElements());
+        this.setPageSize(page.getSize());
     }
 }
