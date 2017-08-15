@@ -6,7 +6,7 @@ import javax.validation.constraints.Size;
 /**
  * Created by darrell-shofstall on 8/11/17.
  */
-public class ArticleDTO {
+public class ArticleDTO extends BaseDTO{
 
     private static final long serialVersionUID = 1L;
 
@@ -39,5 +39,9 @@ public class ArticleDTO {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+
+    public ArticleDTO() {
     }
 }

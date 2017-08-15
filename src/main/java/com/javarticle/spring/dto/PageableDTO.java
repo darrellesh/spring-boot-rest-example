@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by darrell-shofstall on 8/11/17.
  */
-public class PageableDTO {
+public class PageableDTO extends BaseDTO {
 
     private static final long serialVersionUID = 1L;
 
@@ -94,6 +94,9 @@ public class PageableDTO {
         this.currentPageNumber = currentPageNumber + 1;
     }
 
+    public PageableDTO() {
+    }
+
     public PageableDTO(Page page) {
         this.setCurrentPageNumber(page.getNumber());
         this.setTotalElements(page.getTotalElements());
@@ -101,6 +104,7 @@ public class PageableDTO {
         this.setHasNextPage(page.hasNext());
         this.setHasPreviousPage(page.hasPrevious());
         this.setFirstPage(page.isFirst());
+
         this.setLastPage(page.isLast());
         this.setNumberOfElements(page.getNumberOfElements());
         this.setPageSize(page.getSize());

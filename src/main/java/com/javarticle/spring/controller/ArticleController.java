@@ -95,9 +95,8 @@ public class ArticleController {
     private ArticlesDTO buildResponseDto(Page<Article> articles, List<ArticleDTO> listDto ) {
 
         ArticlesDTO responseDto = new ArticlesDTO();
-        PageableDTO pageableDTO = new PageableDTO(articles);
         responseDto.setArticles(listDto);
-        responseDto.setPageableDTO(pageableDTO);
+        responseDto.setPageableDTO(articles);
 
         return responseDto;
     }
