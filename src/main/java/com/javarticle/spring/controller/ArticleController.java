@@ -8,13 +8,10 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.javarticle.spring.common.CommonDependencies;
 import com.javarticle.spring.dto.ArticleDTO;
 import com.javarticle.spring.dto.ArticlesDTO;
 import com.javarticle.spring.dto.ImmutableArticleDTO;
-import com.javarticle.spring.dto.PageableDTO;
 import com.javarticle.spring.entity.Article;
-import com.javarticle.spring.service.ArticleService;
 import com.javarticle.spring.service.IArticleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,8 +51,6 @@ public class ArticleController {
 
     @RequestMapping(value = "articlesByPage", method = RequestMethod.GET)
     public ResponseEntity<List<ArticleDTO>> getPage(@RequestParam(name = "p", defaultValue = "1") int pageNumber) {
-
-        CommonDependencies.articleService.make();
 
         Page<Article> articles = articleService.getPage(pageNumber);
         List<ImmutableArticleDTO> listDto = articles.map(article -> BuildImmutableArticleDTO(article)).getContent();
