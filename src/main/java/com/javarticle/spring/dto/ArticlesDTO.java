@@ -13,13 +13,13 @@ public class ArticlesDTO  extends PageableDTO {
 
     private static final long serialVersionUID = 1L;
 
-    private List<ArticleDTO> articles;
+    private List<ImmutableArticleDTO> articles;
 
-    public List<ArticleDTO> getArticles() {
+    public List<ImmutableArticleDTO> getArticles() {
         return articles;
     }
 
-    public void setArticles(List<ArticleDTO> articles) {
+    public void setArticles(List<ImmutableArticleDTO> articles) {
         this.articles = articles;
     }
 

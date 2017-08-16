@@ -8,10 +8,13 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.javarticle.spring.common.CommonDependencies;
 import com.javarticle.spring.dto.ArticleDTO;
 import com.javarticle.spring.dto.ArticlesDTO;
+import com.javarticle.spring.dto.ImmutableArticleDTO;
 import com.javarticle.spring.dto.PageableDTO;
 import com.javarticle.spring.entity.Article;
+import com.javarticle.spring.service.ArticleService;
 import com.javarticle.spring.service.IArticleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +32,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class ArticleController {
     @Autowired
     private IArticleService articleService;
+
     @Autowired
     private ModelMapper modelMapper;
+
+
 
     @RequestMapping(value = "article/{id}", method = RequestMethod.GET)
     public ResponseEntity<ArticleDTO> getArticleById(@PathVariable("id") Integer id) {
@@ -49,10 +55,14 @@ public class ArticleController {
     @RequestMapping(value = "articlesByPage", method = RequestMethod.GET)
     public ResponseEntity<List<ArticleDTO>> getPage(@RequestParam(name = "p", defaultValue = "1") int pageNumber) {
 
+        CommonDependencies.articleService.make();
+
         Page<Article> articles = articleService.getPage(pageNumber);
-        List<ArticleDTO> listDto = articles.map(article -> convertToDto(article)).getContent();
+        List<ImmutableArticleDTO> listDto = articles.map(article -> BuildImmutableArticleDTO(article)).getContent();
 
         return new ResponseEntity(buildResponseDto(articles, listDto), HttpStatus.OK);
+
+
     }
 
     @RequestMapping(value = "article", method = RequestMethod.POST)
@@ -92,12 +102,16 @@ public class ArticleController {
 
     }
 
-    private ArticlesDTO buildResponseDto(Page<Article> articles, List<ArticleDTO> listDto ) {
+    private ArticlesDTO buildResponseDto(Page<Article> articles, List<ImmutableArticleDTO> listDto ) {
 
         ArticlesDTO responseDto = new ArticlesDTO();
         responseDto.setArticles(listDto);
         responseDto.setPageableDTO(articles);
 
         return responseDto;
+    }
+
+    private  ImmutableArticleDTO BuildImmutableArticleDTO(Article article) {
+        return new ImmutableArticleDTO.ArticleDTOBuilder(article.getArticleId(), article.getCategory()).title(article.getTitle()).build();
     }
 }
